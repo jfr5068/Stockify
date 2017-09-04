@@ -13,13 +13,14 @@ namespace Stockify.Common.Services
     public class StockPageAnalyzer : IPageAnalyzer
     {
         private List<Stock> Stocks = new List<Stock>();
-        private Dictionary<string, int> StockCounts = new Dictionary<string, int>();
+        private Dictionary<string, int> RankedStockChatter = new Dictionary<string, int>();
         private List<string> CommonWords = new List<string>();
+        private Dictionary<string, Dictionary<string, int>> PageRanks = new Dictionary<string, Dictionary<string, int>>();
 
         public StockPageAnalyzer()
         {
             GetCurrentStockInfo();
-            DetermineCommonWords();
+            GetCommonWords();
         }
 
         // Query for all possible stock tickers
@@ -58,38 +59,55 @@ namespace Stockify.Common.Services
                 if (stock.Name.Length > 8 && contentsLower.Contains(stock.Name))
                     count += 10000;
 
+                UpdatePageRank(url, stock, count);
+            }
+        }
+
+        public void RankAll()
+        {
+            foreach(var pageRank in PageRanks)
+            {
                 // TODO: Need to get the top 10 ranks from each page, then check the ranks across other pages
                 // Use some type of scale factor like multiply by the order of the rank in each corresponding page
-                
+
                 // Create a map of the urls and then put these maps beneath, when the process finished then
                 // go through each map, compare the top 10 of each map with each of the other maps, multiply
                 // the count of the map with the rank of the comparing map and then put it into a new map which will
                 // then be sorted again at the end
-
-                UpdateStockStats(stock, count);
-                Console.WriteLine($"{stock.Ticker} Rank: {count}");
             }
         }
 
-        public void PrintTop10()
+        private void UpdatePageRank(string url, Stock stock, int count)
         {
-            var ordered = StockCounts.OrderByDescending(x => x.Value).Take(10);
-            foreach(var stock in ordered)
+            Dictionary<string, int> stockRanks = new Dictionary<string, int>();
+
+            if (!PageRanks.TryGetValue(url, out stockRanks))
             {
-                Console.WriteLine($"Stock: {stock.Key} Rank: {stock.Value}" );
+                PageRanks.Add(url, stockRanks);
             }
+
+            UpdateStockPageRank(stock, count, stockRanks);
         }
 
-        private void UpdateStockStats(Stock stock, int count)
+        private void UpdateStockPageRank(Stock stock, int count, Dictionary<string, int> stockRanks)
         {
             int fCount = 0;
-            if(StockCounts.TryGetValue($"{stock.Ticker}|{stock.Name}", out fCount))
+            if(stockRanks.TryGetValue($"{stock.Ticker}|{stock.Name}", out fCount))
             {
-                StockCounts[$"{stock.Ticker}|{stock.Name}"] = count + fCount;
+                stockRanks[$"{stock.Ticker}|{stock.Name}"] = count + fCount;
             }
             else
             {
-                StockCounts.Add($"{stock.Ticker}|{stock.Name}", count);
+                stockRanks.Add($"{stock.Ticker}|{stock.Name}", count);
+            }
+        }
+
+        public void PrintRanked()
+        {
+            var ordered = RankedStockChatter.OrderByDescending(x => x.Value).Take(10);
+            foreach (var stock in ordered)
+            {
+                Console.WriteLine($"Stock: {stock.Key} Rank: {stock.Value}");
             }
         }
 
@@ -117,7 +135,7 @@ namespace Stockify.Common.Services
             }
         }
 
-        private void DetermineCommonWords()
+        private void GetCommonWords()
         {
             this.CommonWords = new List<string>();
             foreach(var line in File.ReadAllLines("C:\\Users\\ricejf\\Documents\\Personal\\Stockify\\Stocks\\commonWords.txt"))
