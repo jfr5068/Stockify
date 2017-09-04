@@ -60,6 +60,11 @@ namespace Stockify.Common.Services
 
                 // TODO: Need to get the top 10 ranks from each page, then check the ranks across other pages
                 // Use some type of scale factor like multiply by the order of the rank in each corresponding page
+                
+                // Create a map of the urls and then put these maps beneath, when the process finished then
+                // go through each map, compare the top 10 of each map with each of the other maps, multiply
+                // the count of the map with the rank of the comparing map and then put it into a new map which will
+                // then be sorted again at the end
 
                 UpdateStockStats(stock, count);
                 Console.WriteLine($"{stock.Ticker} Rank: {count}");
