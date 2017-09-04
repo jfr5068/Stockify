@@ -58,6 +58,9 @@ namespace Stockify.Common.Services
                 if (stock.Name.Length > 8 && contentsLower.Contains(stock.Name))
                     count += 10000;
 
+                // TODO: Need to get the top 10 ranks from each page, then check the ranks across other pages
+                // Use some type of scale factor like multiply by the order of the rank in each corresponding page
+
                 UpdateStockStats(stock, count);
                 Console.WriteLine($"{stock.Ticker} Rank: {count}");
             }
