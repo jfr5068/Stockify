@@ -57,7 +57,7 @@ namespace Stockify.Common.Services
             // TODO: Should search these in random order so that we dont hit the same links over and over
             foreach (HtmlNode link in doc.DocumentNode.SelectNodes("//a[@href]"))
             {
-                if(count >= 5)
+                if(count >= 20)
                 {
                     return;
                 }

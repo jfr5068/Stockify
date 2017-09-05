@@ -34,6 +34,12 @@ namespace Stockify.Common.Services
             var contentsLower = contents.ToLower();
             foreach (Stock stock in Stocks)
             {
+                if(stock.Name.Contains("morgan"))
+                {
+                    // Disregard morgan stanley it shows up everywhere
+                    continue;
+                }
+
                 int count = 0;
                 // Count the number of times the stock ticker was found
                 count += Regex.Matches(contentsLower, $" {stock.Ticker} ").Count;
@@ -42,6 +48,7 @@ namespace Stockify.Common.Services
                 // If the word is not a common word then get the number of matches
                 // also multiply the count by the length of the word
                 var nameWords = stock.Name.Split(' ');
+
                 foreach(var word in nameWords)
                 {
                     if(!CommonWords.Contains(word))
@@ -144,8 +151,8 @@ namespace Stockify.Common.Services
 
         private void GetCurrentStockInfo()
         {
-            this.AddToStocks(File.ReadAllLines("C:\\Users\\ricejf\\Documents\\Personal\\Stockify\\Stocks\\nasdaq.csv").ToList());
-            this.AddToStocks(File.ReadAllLines("C:\\Users\\ricejf\\Documents\\Personal\\Stockify\\Stocks\\nyse.csv").ToList());
+            this.AddToStocks(File.ReadAllLines("nasdaq.csv").ToList());
+            this.AddToStocks(File.ReadAllLines("nyse.csv").ToList());
         }
 
         private void AddToStocks(List<string> lines)
@@ -169,7 +176,7 @@ namespace Stockify.Common.Services
         private void GetCommonWords()
         {
             this.CommonWords = new List<string>();
-            foreach(var line in File.ReadAllLines("C:\\Users\\ricejf\\Documents\\Personal\\Stockify\\Stocks\\commonWords.txt"))
+            foreach(var line in File.ReadAllLines("commonWords.txt"))
             {
                 this.CommonWords.Add(line.ToLower());
             }
