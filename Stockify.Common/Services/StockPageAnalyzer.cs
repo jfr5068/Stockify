@@ -16,7 +16,7 @@ namespace Stockify.Common.Services
         private Dictionary<string, int> RankedStockChatter = new Dictionary<string, int>();
         private List<string> CommonWords = new List<string>();
         private Dictionary<string, Dictionary<string, int>> PageRanks = new Dictionary<string, Dictionary<string, int>>();
-        private const int NUM_RANKS = 10;
+        private const int NUM_RANKS = 30;
 
         public StockPageAnalyzer()
         {
