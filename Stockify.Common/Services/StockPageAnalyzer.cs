@@ -16,6 +16,7 @@ namespace Stockify.Common.Services
         private Dictionary<string, int> RankedStockChatter = new Dictionary<string, int>();
         private List<string> CommonWords = new List<string>();
         private Dictionary<string, Dictionary<string, int>> PageRanks = new Dictionary<string, Dictionary<string, int>>();
+        private const int NUM_RANKS = 10;
 
         public StockPageAnalyzer()
         {
@@ -49,9 +50,9 @@ namespace Stockify.Common.Services
                         {
                             count += (Regex.Matches(contentsLower, $" {word} ").Count * word.Length);
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
-                            Console.WriteLine(ex.Message);
+                            // Noop, these mean special characters
                         }
                     }
                 }
@@ -63,26 +64,36 @@ namespace Stockify.Common.Services
             }
         }
 
+        /// <summary>
+        /// This will go through each top 10 stocks from each page and then compare the rank from other pages
+        /// it then takes the compared rank and adds it to the page rank and places this in the Ranked stock chatter
+        /// </summary>
         public void RankAll()
         {
             foreach(var pageRank in PageRanks)
             {
-                // TODO: Need to get the top 10 ranks from each page, then check the ranks across other pages
-                // Use some type of scale factor like multiply by the order of the rank in each corresponding page
-
-                // Create a map of the urls and then put these maps beneath, when the process finished then
-                // go through each map, compare the top 10 of each map with each of the other maps, multiply
-                // the count of the map with the rank of the comparing map and then put it into a new map which will
-                // then be sorted again at the end
+                foreach(var comparingPageRank in PageRanks)
+                {
+                    if(pageRank.Key != comparingPageRank.Key)
+                    {
+                        var topRanked = pageRank.Value.OrderByDescending(x => x.Value).Take(NUM_RANKS);
+                        foreach(var stock in topRanked)
+                        {
+                            int count = stock.Value + comparingPageRank.Value[stock.Key];
+                            UpdateRankChatter(stock.Key, count, RankedStockChatter);
+                        }
+                    }
+                }
             }
         }
 
         private void UpdatePageRank(string url, Stock stock, int count)
         {
-            Dictionary<string, int> stockRanks = new Dictionary<string, int>();
+            Dictionary<string, int> stockRanks;
 
             if (!PageRanks.TryGetValue(url, out stockRanks))
             {
+                stockRanks = new Dictionary<string, int>();
                 PageRanks.Add(url, stockRanks);
             }
 
@@ -92,19 +103,33 @@ namespace Stockify.Common.Services
         private void UpdateStockPageRank(Stock stock, int count, Dictionary<string, int> stockRanks)
         {
             int fCount = 0;
-            if(stockRanks.TryGetValue($"{stock.Ticker}|{stock.Name}", out fCount))
+            string key = $"{stock.Ticker}|{stock.Name}";
+            if (stockRanks.TryGetValue(key, out fCount))
             {
-                stockRanks[$"{stock.Ticker}|{stock.Name}"] = count + fCount;
+                stockRanks[key] = count + fCount;
             }
             else
             {
-                stockRanks.Add($"{stock.Ticker}|{stock.Name}", count);
+                stockRanks.Add(key, count);
+            }
+        }
+
+        private void UpdateRankChatter(string stock, int count, Dictionary<string, int> stockRanks)
+        {
+            int fCount = 0;
+            if (stockRanks.TryGetValue(stock, out fCount))
+            {
+                stockRanks[stock] = count + fCount;
+            }
+            else
+            {
+                stockRanks.Add(stock, count);
             }
         }
 
         public void PrintRanked()
         {
-            var ordered = RankedStockChatter.OrderByDescending(x => x.Value).Take(10);
+            var ordered = RankedStockChatter.OrderByDescending(x => x.Value).Take(NUM_RANKS);
             foreach (var stock in ordered)
             {
                 Console.WriteLine($"Stock: {stock.Key} Rank: {stock.Value}");

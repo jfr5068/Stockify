@@ -15,7 +15,8 @@ namespace Stockify
             StockPageAnalyzer analyzer = new StockPageAnalyzer();
             WebCrawler crawler = new WebCrawler(test, analyzer);
             crawler.Crawl();
-            analyzer.PrintTop10();
+            analyzer.RankAll();
+            analyzer.PrintRanked();
         }
     }
 }
