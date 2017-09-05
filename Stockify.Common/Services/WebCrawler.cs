@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HtmlAgilityPack;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -24,12 +25,39 @@ namespace Stockify.Common.Services
             // can track all pages.
             // Then the crawler will also scan the site for links to other pages, and pass them to the analyzer too
             // Limit the number of scans beneath a rootsite to be 10?
-            foreach(string site in rootSites)
+            foreach (string site in rootSites)
             {
-                Console.WriteLine($"Crawling: {site}");
-                WebClient client = new WebClient();
-                var content = client.DownloadString(site);
-                this.analyzer.Analyze(site, content);
+                Crawl(site, true);
+            }
+        }
+
+        public void Crawl(string site, bool findChildren)
+        {
+            Console.WriteLine($"Crawling: {site}");
+            WebClient client = new WebClient();
+            var content = client.DownloadString(site);
+            this.analyzer.Analyze(site, content);
+
+            if(findChildren)
+                FindAndCrawlLinks(site);
+        }
+
+        private void FindAndCrawlLinks(string site)
+        {
+            HtmlWeb hw = new HtmlWeb();
+            HtmlDocument doc = hw.Load(site);
+            int count = 0;
+            foreach (HtmlNode link in doc.DocumentNode.SelectNodes("//a[@href]"))
+            {
+                if(count >= 10)
+                {
+                    return;
+                }
+                var child = link.Attributes["href"].Value;
+                if (child.ToLower().Contains("http"))
+                {
+                    Crawl(child, false);
+                }
             }
         }
     }
