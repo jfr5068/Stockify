@@ -33,13 +33,20 @@ namespace Stockify.Common.Services
 
         public void Crawl(string site, bool findChildren)
         {
-            Console.WriteLine($"Crawling: {site}");
-            WebClient client = new WebClient();
-            var content = client.DownloadString(site);
-            this.analyzer.Analyze(site, content);
+            try
+            {
+                Console.WriteLine($"Crawling: {site}");
+                WebClient client = new WebClient();
+                var content = client.DownloadString(site);
+                this.analyzer.Analyze(site, content);
 
-            if(findChildren)
-                FindAndCrawlLinks(site);
+                if (findChildren)
+                    FindAndCrawlLinks(site);
+            }
+            catch (Exception)
+            {
+                // Noop
+            }
         }
 
         private void FindAndCrawlLinks(string site)
@@ -47,12 +54,14 @@ namespace Stockify.Common.Services
             HtmlWeb hw = new HtmlWeb();
             HtmlDocument doc = hw.Load(site);
             int count = 0;
+            // TODO: Should search these in random order so that we dont hit the same links over and over
             foreach (HtmlNode link in doc.DocumentNode.SelectNodes("//a[@href]"))
             {
-                if(count >= 10)
+                if(count >= 5)
                 {
                     return;
                 }
+                count++;
                 var child = link.Attributes["href"].Value;
                 if (child.ToLower().Contains("http"))
                 {
