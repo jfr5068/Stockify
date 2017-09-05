@@ -130,10 +130,16 @@ namespace Stockify.Common.Services
         public void PrintRanked()
         {
             var ordered = RankedStockChatter.OrderByDescending(x => x.Value).Take(NUM_RANKS);
+            Console.WriteLine("/////////////////////////////////////////////////////////////////");
+            Console.WriteLine("/////////////////////////////RANKED//////////////////////////////");
+            Console.WriteLine("/////////////////////////////////////////////////////////////////");
             foreach (var stock in ordered)
             {
                 Console.WriteLine($"Stock: {stock.Key} Rank: {stock.Value}");
             }
+            Console.WriteLine("/////////////////////////////////////////////////////////////////");
+            Console.WriteLine("/////////////////////////////////////////////////////////////////");
+            Console.WriteLine("/////////////////////////////////////////////////////////////////");
         }
 
         private void GetCurrentStockInfo()

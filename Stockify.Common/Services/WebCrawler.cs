@@ -26,6 +26,7 @@ namespace Stockify.Common.Services
             // Limit the number of scans beneath a rootsite to be 10?
             foreach(string site in rootSites)
             {
+                Console.WriteLine($"Crawling: {site}");
                 WebClient client = new WebClient();
                 var content = client.DownloadString(site);
                 this.analyzer.Analyze(site, content);
