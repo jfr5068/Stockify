@@ -54,15 +54,16 @@ namespace Stockify.Common.Services
             HtmlWeb hw = new HtmlWeb();
             HtmlDocument doc = hw.Load(site);
             int count = 0;
-            // TODO: Should search these in random order so that we dont hit the same links over and over
-            foreach (HtmlNode link in doc.DocumentNode.SelectNodes("//a[@href]"))
+            Random rand = new Random();
+
+            var links = doc.DocumentNode.SelectNodes("//a[@href]").ToList();
+
+            for(int i = 0; i < links.Count; i++)
             {
-                if(count >= 4)
-                {
+                if (i > 10)
                     return;
-                }
-                count++;
-                var child = link.Attributes["href"].Value;
+
+                var child = links[rand.Next(0, links.Count)].Attributes["href"].Value;
                 if (child.ToLower().Contains("http"))
                 {
                     Crawl(child, false);

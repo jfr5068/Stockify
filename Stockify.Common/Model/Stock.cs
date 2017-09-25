@@ -10,5 +10,6 @@ namespace Stockify.Common.Model
     {
         public string Ticker { get; set; }
         public string Name { get; set; }
+        public int Rank { get; set; }
 }
 }

@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stockify", "Stockify\Stocki
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stockify.Common", "Stockify.Common\Stockify.Common.csproj", "{FAD09C2D-04B2-4D6C-B0CB-58F8FD3DD06B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stockify.Aggregator", "Stockify.Aggregator\Stockify.Aggregator.csproj", "{BCDA1472-BDE6-4713-B938-F1F8E12D4F16}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stockify.Api", "Stockify.Api\Stockify.Api.csproj", "{263A1064-4CAB-4681-B4CC-732E08969395}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{FAD09C2D-04B2-4D6C-B0CB-58F8FD3DD06B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FAD09C2D-04B2-4D6C-B0CB-58F8FD3DD06B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FAD09C2D-04B2-4D6C-B0CB-58F8FD3DD06B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCDA1472-BDE6-4713-B938-F1F8E12D4F16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCDA1472-BDE6-4713-B938-F1F8E12D4F16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCDA1472-BDE6-4713-B938-F1F8E12D4F16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCDA1472-BDE6-4713-B938-F1F8E12D4F16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{263A1064-4CAB-4681-B4CC-732E08969395}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{263A1064-4CAB-4681-B4CC-732E08969395}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{263A1064-4CAB-4681-B4CC-732E08969395}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{263A1064-4CAB-4681-B4CC-732E08969395}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
