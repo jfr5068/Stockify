@@ -1,4 +1,5 @@
 ﻿using HtmlAgilityPack;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace Stockify.Common.Services
 {
     public class WebCrawler
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(WebCrawler));
         private List<string> rootSites;
         private IPageAnalyzer analyzer;
 
@@ -35,7 +37,7 @@ namespace Stockify.Common.Services
         {
             try
             {
-                Console.WriteLine($"Crawling: {site}");
+                Log.Info($"Crawling: {site}");
                 WebClient client = new WebClient();
                 var content = client.DownloadString(site);
                 this.analyzer.Analyze(site, content);

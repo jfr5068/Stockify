@@ -24,7 +24,7 @@ namespace Stockify.Api.Controllers
         {
             try
             {
-                if (LastRefreshed == null || DateTime.UtcNow.Subtract(LastRefreshed).TotalMinutes > 30)
+                if (LastRefreshed == null || DateTime.UtcNow.Subtract(LastRefreshed).TotalMinutes > 5)
                 {
                     var log = ConfigurationManager.AppSettings["logFile"];
                     StockPageAnalyzer analyzer = new StockPageAnalyzer();

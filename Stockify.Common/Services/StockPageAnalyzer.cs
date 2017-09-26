@@ -145,7 +145,6 @@ namespace Stockify.Common.Services
             Console.WriteLine("/////////////////////////////////////////////////////////////////");
             foreach (var stock in ordered)
             {
-                Console.WriteLine($"Stock: {stock.Key} Rank: {stock.Value}");
                 Log.Info($"Stock: {stock.Key} Rank: {stock.Value}");
             }
             Console.WriteLine("/////////////////////////////////////////////////////////////////");
@@ -159,7 +158,7 @@ namespace Stockify.Common.Services
             {
                 Name = x.Key,
                 Rank = x.Value
-            }).ToList();
+            }).OrderByDescending(x => x.Rank).ToList();
         }
 
         private void GetCurrentStockInfo()
