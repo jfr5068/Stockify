@@ -1,4 +1,5 @@
-﻿using System;
+﻿using log4net;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
@@ -10,14 +11,23 @@ namespace Stockify.Common.Services
 {
     public class StockCrawlerHandler
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(StockCrawlerHandler));
+
         public static void Handle(object source, ElapsedEventArgs e)
         {
-            var seedUrls = ConfigurationManager.AppSettings["Seeds"].Split(',').ToList();
-            StockPageAnalyzer analyzer = new StockPageAnalyzer();
-            WebCrawler crawler = new WebCrawler(seedUrls, analyzer);
-            crawler.Crawl();
-            analyzer.RankAll();
-            analyzer.PrintRanked();
+            try
+            {
+                var seedUrls = ConfigurationManager.AppSettings["Seeds"].Split(',').ToList();
+                StockPageAnalyzer analyzer = new StockPageAnalyzer();
+                WebCrawler crawler = new WebCrawler(seedUrls, analyzer);
+                crawler.Crawl();
+                analyzer.RankAll();
+                analyzer.PrintRanked();
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Failed to run analyzer", ex);
+            }
         }
     }
 }

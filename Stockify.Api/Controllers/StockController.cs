@@ -1,5 +1,10 @@
-﻿using System;
+﻿using log4net;
+using Stockify.Common.Model;
+using Stockify.Common.Services;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -9,10 +14,32 @@ namespace Stockify.Api.Controllers
 {
     public class StockController : ApiController
     {
+        private DateTime LastRefreshed;
+        private List<Stock> cached;
+        private static readonly ILog Log = LogManager.GetLogger(typeof(StockController));
+
         // GET: api/Stock
-        public IEnumerable<string> Get()
+        public IEnumerable<Stock> Get()
         {
-            return new string[] { "value1", "value2" };
+            try
+            {
+                if (LastRefreshed == null || DateTime.UtcNow.Subtract(LastRefreshed).TotalMinutes > 30)
+                {
+                    var log = ConfigurationManager.AppSettings["logFile"];
+                    StockPageAnalyzer analyzer = new StockPageAnalyzer();
+                    analyzer.Analyze("Log", File.ReadAllText(log));
+                    analyzer.RankAll();
+                    cached = analyzer.GetLogRanked();
+                    LastRefreshed = DateTime.UtcNow;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Failed to analyze and return log data", ex);
+                throw;
+            }
+
+            return cached;
         }
 
         // GET: api/Stock/5

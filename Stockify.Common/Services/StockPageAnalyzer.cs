@@ -1,7 +1,9 @@
-﻿using Stockify.Common.Model;
+﻿using log4net;
+using Stockify.Common.Model;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -16,7 +18,8 @@ namespace Stockify.Common.Services
         private Dictionary<string, int> RankedStockChatter = new Dictionary<string, int>();
         private List<string> CommonWords = new List<string>();
         private Dictionary<string, Dictionary<string, int>> PageRanks = new Dictionary<string, Dictionary<string, int>>();
-        private const int NUM_RANKS = 30;
+        private const int NUM_RANKS = 200;
+        private static readonly ILog Log = LogManager.GetLogger(typeof(StockPageAnalyzer));
 
         public StockPageAnalyzer()
         {
@@ -143,16 +146,26 @@ namespace Stockify.Common.Services
             foreach (var stock in ordered)
             {
                 Console.WriteLine($"Stock: {stock.Key} Rank: {stock.Value}");
+                Log.Info($"Stock: {stock.Key} Rank: {stock.Value}");
             }
             Console.WriteLine("/////////////////////////////////////////////////////////////////");
             Console.WriteLine("/////////////////////////////////////////////////////////////////");
             Console.WriteLine("/////////////////////////////////////////////////////////////////");
         }
 
+        public List<Stock> GetLogRanked()
+        {
+            return PageRanks["Log"].OrderByDescending(x => x.Value).Take(NUM_RANKS).Select(x => new Stock
+            {
+                Name = x.Key,
+                Rank = x.Value
+            }).ToList();
+        }
+
         private void GetCurrentStockInfo()
         {
-            this.AddToStocks(File.ReadAllLines("nasdaq.csv").ToList());
-            this.AddToStocks(File.ReadAllLines("nyse.csv").ToList());
+            this.AddToStocks(File.ReadAllLines(ConfigurationManager.AppSettings["nasdaq"]).ToList());
+            this.AddToStocks(File.ReadAllLines(ConfigurationManager.AppSettings["nyse"]).ToList());
         }
 
         private void AddToStocks(List<string> lines)
@@ -176,7 +189,7 @@ namespace Stockify.Common.Services
         private void GetCommonWords()
         {
             this.CommonWords = new List<string>();
-            foreach(var line in File.ReadAllLines("commonWords.txt"))
+            foreach(var line in File.ReadAllLines(ConfigurationManager.AppSettings["commonWords"]))
             {
                 this.CommonWords.Add(line.ToLower());
             }
