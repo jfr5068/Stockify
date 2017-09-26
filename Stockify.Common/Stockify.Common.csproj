@@ -57,6 +57,7 @@
     <Compile Include="Services\StockCrawlerHandler.cs" />
     <Compile Include="Services\StockPageAnalyzer.cs" />
     <Compile Include="Services\WebCrawler.cs" />
+    <Compile Include="Utility\StockifyUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="nasdaq.csv">

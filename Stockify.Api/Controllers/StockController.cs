@@ -1,6 +1,7 @@
 ﻿using log4net;
 using Stockify.Common.Model;
 using Stockify.Common.Services;
+using Stockify.Common.Utility;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -27,7 +28,7 @@ namespace Stockify.Api.Controllers
                 {
                     var log = ConfigurationManager.AppSettings["logFile"];
                     StockPageAnalyzer analyzer = new StockPageAnalyzer();
-                    analyzer.Analyze("Log", File.ReadAllText(log));
+                    analyzer.Analyze("Log", StockifyUtility.ReadAllLines(log));
                     analyzer.RankAll();
                     cached = analyzer.GetLogRanked();
                     LastRefreshed = DateTime.UtcNow;
