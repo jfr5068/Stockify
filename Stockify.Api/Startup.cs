@@ -24,7 +24,16 @@ namespace Stockify.Api
             aTimer.Elapsed += new ElapsedEventHandler(StockCrawlerHandler.Handle);
             aTimer.Interval = 30 * 60 * 1000;
             aTimer.Enabled = true;
-            Log.Info("Started Up!");
+
+            Timer pTimer = new Timer();
+            pTimer.Elapsed += new ElapsedEventHandler(StockCrawlerHandler.Aggregate);
+            pTimer.Interval =  360 * 60 * 1000;
+            pTimer.Enabled = true;
+
+            Timer rTimer = new Timer();
+            rTimer.Elapsed += new ElapsedEventHandler(StockCrawlerHandler.FindChatter);
+            rTimer.Interval = 45 * 60 * 1000;
+            rTimer.Enabled = true;
         }
     }
 }

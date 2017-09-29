@@ -1,4 +1,5 @@
 ﻿using log4net;
+using Newtonsoft.Json;
 using Stockify.Common.Model;
 using System;
 using System.Collections.Concurrent;
@@ -145,7 +146,8 @@ namespace Stockify.Common.Services
             Console.WriteLine("/////////////////////////////////////////////////////////////////");
             foreach (var stock in ordered)
             {
-                Log.Info($"Stock: {stock.Key} Rank: {stock.Value}");
+                var name = stock.Key.Split('|');
+                Log.Info($"Stock: {JsonConvert.SerializeObject(new Stock { Name = name[1], Ticker = name[0], Rank = stock.Value})}");
             }
             Console.WriteLine("/////////////////////////////////////////////////////////////////");
             Console.WriteLine("/////////////////////////////////////////////////////////////////");

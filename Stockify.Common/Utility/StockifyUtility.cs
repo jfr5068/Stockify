@@ -9,17 +9,18 @@ namespace Stockify.Common.Utility
 {
     public class StockifyUtility
     {
-        public static string ReadAllLines(String path)
+        public static List<string> ReadAllLines(String path)
         {
+            List<string> result = new List<string>();
             using (var csv = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             using (var sr = new StreamReader(csv))
             {
                 StringBuilder strB = new StringBuilder();
                 while (!sr.EndOfStream)
                 {
-                    strB.AppendLine(sr.ReadLine());
+                    result.Add(sr.ReadLine());
                 }
-                return strB.ToString();
+                return result;
             }
         }
     }

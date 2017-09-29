@@ -13,6 +13,8 @@ namespace Stockify.Common.Services
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(StockCrawlerHandler));
         private static bool IsRunning = false;
+        private static bool IsPresenceRunning = false;
+        private static bool IsChatterRunning = false;
 
         public static void Handle(object source, ElapsedEventArgs e)
         {
@@ -42,6 +44,60 @@ namespace Stockify.Common.Services
             finally
             {
                 IsRunning = false;
+            }
+        }
+
+        public static void Aggregate(object source, ElapsedEventArgs e)
+        {
+            try
+            {
+                if (!IsPresenceRunning)
+                {
+                    IsRunning = true;
+                    Log.Info("Timer fired, triggering new presence scan");
+                    StockAggregator agg = new StockAggregator();
+                    agg.Analyze();
+                    Log.Info("Presence scan finished!");
+                }
+                else
+                {
+                    Log.Warn("A presence scan is already running, ignoring this one");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Failed to run presence scan", ex);
+            }
+            finally
+            {
+                IsPresenceRunning = false;
+            }
+        }
+
+        public static void FindChatter(object source, ElapsedEventArgs e)
+        {
+            try
+            {
+                if (!IsChatterRunning)
+                {
+                    IsRunning = true;
+                    Log.Info("Timer fired, triggering new rank scan");
+                    StockAggregator agg = new StockAggregator();
+                    agg.Aggregate();
+                    Log.Info("Rank scan finished!");
+                }
+                else
+                {
+                    Log.Warn("A rank scan is already running, ignoring this one");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Failed to run rank scan", ex);
+            }
+            finally
+            {
+                IsChatterRunning = false;
             }
         }
     }

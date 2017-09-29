@@ -1,4 +1,5 @@
 ﻿using log4net;
+using Newtonsoft.Json;
 using Stockify.Common.Model;
 using Stockify.Common.Services;
 using Stockify.Common.Utility;
@@ -15,8 +16,6 @@ namespace Stockify.Api.Controllers
 {
     public class StockController : ApiController
     {
-        private DateTime LastRefreshed;
-        private List<Stock> cached;
         private static readonly ILog Log = LogManager.GetLogger(typeof(StockController));
 
         // GET: api/Stock
@@ -24,44 +23,13 @@ namespace Stockify.Api.Controllers
         {
             try
             {
-                if (LastRefreshed == null || DateTime.UtcNow.Subtract(LastRefreshed).TotalMinutes > 5)
-                {
-                    var log = ConfigurationManager.AppSettings["logFile"];
-                    StockPageAnalyzer analyzer = new StockPageAnalyzer();
-                    analyzer.Analyze("Log", StockifyUtility.ReadAllLines(log));
-                    analyzer.RankAll();
-                    cached = analyzer.GetLogRanked();
-                    LastRefreshed = DateTime.UtcNow;
-                }
+                return StockifyUtility.ReadAllLines("D:\\home\\stockify\\currentChatter.txt").Select(x => JsonConvert.DeserializeObject<Stock>(x));
             }
             catch (Exception ex)
             {
-                Log.Error("Failed to analyze and return log data", ex);
-                throw;
+                Log.Error("Unable to read current chatter", ex);
+                return null;
             }
-
-            return cached;
-        }
-
-        // GET: api/Stock/5
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST: api/Stock
-        public void Post([FromBody]string value)
-        {
-        }
-
-        // PUT: api/Stock/5
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE: api/Stock/5
-        public void Delete(int id)
-        {
         }
     }
 }
