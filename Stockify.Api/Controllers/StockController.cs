@@ -23,7 +23,7 @@ namespace Stockify.Api.Controllers
         {
             try
             {
-                return StockifyUtility.ReadAllLines("D:\\home\\stockify\\currentChatter.txt").Select(x => JsonConvert.DeserializeObject<Stock>(x));
+                return StockifyUtility.ReadAllLines("D:\\home\\stockify\\currentChatter.txt").Select(x => JsonConvert.DeserializeObject<Stock>(x)).OrderByDescending(x => x.Rank).Take(200);
             }
             catch (Exception ex)
             {
