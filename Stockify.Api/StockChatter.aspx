@@ -10,6 +10,7 @@
                 <table class="table table-hover table-striped" id="table" style="width: 100%">
                     <thead>
                         <tr>
+                            <th>Ticker</th>
                             <th>Company</th>
                             <th>Rank</th>
                         </tr>
@@ -63,6 +64,7 @@
                     var stocks = result;
                     for (var i = 0; i < stocks.length; i++) {
                         var newRow = table.row.add([
+                            stocks[i].ticker,
                             stocks[i].name,
                             stocks[i].rank
                         ]);

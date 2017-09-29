@@ -53,7 +53,7 @@ namespace Stockify.Common.Services
             {
                 if (!IsPresenceRunning)
                 {
-                    IsRunning = true;
+                    IsPresenceRunning = true;
                     Log.Info("Timer fired, triggering new presence scan");
                     StockAggregator agg = new StockAggregator();
                     agg.Analyze();
@@ -80,7 +80,7 @@ namespace Stockify.Common.Services
             {
                 if (!IsChatterRunning)
                 {
-                    IsRunning = true;
+                    IsChatterRunning = true;
                     Log.Info("Timer fired, triggering new rank scan");
                     StockAggregator agg = new StockAggregator();
                     agg.Aggregate();
