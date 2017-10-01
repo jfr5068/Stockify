@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 
 namespace Stockify.Api
 {
-    public partial class StockChatter : System.Web.UI.Page
+    public partial class HighPresence : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
