@@ -219,6 +219,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\HighPresenceController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MeController.cs" />
@@ -234,6 +235,13 @@
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="HighPresence.aspx.cs">
+      <DependentUpon>HighPresence.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="HighPresence.aspx.designer.cs">
+      <DependentUpon>HighPresence.aspx</DependentUpon>
+    </Compile>
     <Compile Include="StockChatter.aspx.cs">
       <DependentUpon>StockChatter.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -297,6 +305,7 @@
     <Content Include="Scripts\app\app.viewmodel.js" />
     <Content Include="Scripts\app\common.js" />
     <Content Include="Scripts\app\home.viewmodel.js" />
+    <Content Include="HighPresence.aspx" />
     <Content Include="StockChatter.aspx" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Account\ConfirmEmail.cshtml" />

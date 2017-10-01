@@ -1,8 +1,8 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="StockChatter.aspx.cs" Inherits="Stockify.Api.StockChatter" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="HighPresence.aspx.cs" Inherits="Stockify.Api.StockChatter" %>
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">Stock Chatter</h1>
+                <h1 class="page-header">High Presence</h1>
             </div>
         </div>
         <div class="panel-body">
@@ -10,9 +10,8 @@
                 <table class="table table-hover table-striped" id="table" style="width: 100%">
                     <thead>
                         <tr>
-                            <th>Rank</th>
+                            <th>Occurrences</th>
                             <th>Ticker</th>
-                            <th>Company</th>
                         </tr>
                     </thead>
                     <tbody style="cursor: pointer;">
@@ -54,7 +53,7 @@
         function getData() {
             $.ajax({
                 type: "GET",
-                url: "/api/Stock",
+                url: "/api/HighPresence",
                 contentType: "application/json; charset=utf-8",
                 dataType: 'json',
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -64,9 +63,8 @@
                     var stocks = result;
                     for (var i = 0; i < stocks.length; i++) {
                         var newRow = table.row.add([
-                            stocks[i].rank,
-                            stocks[i].ticker,
-                            stocks[i].name
+                            stocks[i].occurrences,
+                            stocks[i].ticker
                         ]);
                     }
                     table.draw();
